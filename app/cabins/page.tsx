@@ -2,6 +2,8 @@ import CabinList from "@/app/_component/CabinList";
 import { Suspense } from "react";
 import Spinner from "@/app/_component/Spinner";
 
+export const revalidate = 36000; // refetch data every 10 hours
+
 export const metadata = {
   title: "Cabins",
 };

@@ -3,6 +3,7 @@ const nextConfig = {
   images: {
     domains: ["josfxdaheuubqlfgrvqu.supabase.co"],
   },
+  //output: "export",
 };
 
 export default nextConfig;
