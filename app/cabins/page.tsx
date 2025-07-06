@@ -2,6 +2,7 @@ import CabinList from "@/app/_component/CabinList";
 import { Suspense } from "react";
 import Spinner from "@/app/_component/Spinner";
 import Filter from "../_component/Filter";
+import ReservationReminder from "../_component/ReservationReminder";
 
 export const revalidate = 86400; // refetch data every 24 hours
 
@@ -29,6 +30,7 @@ export default function Page({ searchParams }) {
       </div>
       <Suspense fallback={<Spinner />} key={filter}>
         <CabinList filter={filter} />
+        <ReservationReminder />
       </Suspense>
     </div>
   );
