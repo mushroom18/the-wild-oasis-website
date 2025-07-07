@@ -12,4 +12,7 @@ export const authOptions = {
       return !!auth?.user;
     },
   },
+  pages: {
+    signIn: "/login",
+  },
 };
