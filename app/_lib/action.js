@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { deleteBooking, updateGuest } from "./data-service";
+import { deleteBooking, getBookings, updateGuest } from "./data-service";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
 
@@ -26,6 +26,12 @@ export async function deleteReservation(bookingId) {
   const session = await getServerSession(authOptions);
   if (!session)
     throw new Error("you must be logged in to delete a reservation");
+
+  const guestBookings = await getBookings(session.user.guestId);
+  const bookingIds = guestBookings.map((booking) => booking.id);
+  if (!bookingIds.includes(bookingId))
+    throw new Error("you do not have permission to delete this reservation");
+
   await deleteBooking(bookingId);
   revalidatePath("/accounts/reservations");
 }
