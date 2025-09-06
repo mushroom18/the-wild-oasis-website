@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { updateGuest } from "./data-service";
+import { deleteBooking, updateGuest } from "./data-service";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
 
@@ -20,4 +20,12 @@ export async function updateGuestProfile(formData) {
   //console.log("updateData", updateData);
   await updateGuest(session.user.guestId, updatedData);
   revalidatePath("/accounts/profile");
+}
+
+export async function deleteReservation(bookingId) {
+  const session = await getServerSession(authOptions);
+  if (!session)
+    throw new Error("you must be logged in to delete a reservation");
+  await deleteBooking(bookingId);
+  revalidatePath("/accounts/reservations");
 }
