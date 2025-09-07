@@ -11,7 +11,6 @@ import {
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
 import { redirect } from "next/navigation";
-import { is } from "date-fns/locale";
 
 export async function updateGuestProfile(formData) {
   //console.log("formdata", formData);

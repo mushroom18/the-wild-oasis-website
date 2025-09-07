@@ -1,6 +1,5 @@
 import CabinCard from "../_component/CabinCard";
 import { getCabins } from "../_lib/data-service";
-import { unstable_noStore as noStore } from "next/cache";
 
 export default async function CabinList({ filter }) {
   //this function is to ensure that the data is not cached

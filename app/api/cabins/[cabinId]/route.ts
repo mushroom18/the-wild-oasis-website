@@ -8,7 +8,7 @@ export async function GET(request, { params }) {
       getBookedDatesByCabinId(cabinId),
     ]);
     return Response.json({ cabin, bookedDates });
-  } catch (error) {
+  } catch {
     return Response.json({ error: "Failed to fetch cabin data" });
   }
 }
