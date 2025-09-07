@@ -15,11 +15,12 @@ function ReservationForm({ cabin, user }) {
         {
           <div className="flex gap-4 items-center">
             <Image
-              // Important to display google profile images
               referrerPolicy="no-referrer"
               className="h-8 rounded-full"
               src={user.image}
               alt={user.name}
+              width={32}
+              height={32}
             />
             <p>{user.name}</p>
           </div>
