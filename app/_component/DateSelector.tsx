@@ -5,37 +5,56 @@ import {
   isSameDay,
   isWithinInterval,
 } from "date-fns";
-import { DayPicker } from "react-day-picker";
+import { DayPicker, DayRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { useReservation } from "./ReservationContext";
 
-function isAlreadyBooked(range, datesArr) {
+interface DateSelectorProps {
+  settings: {
+    minBookingLength: number;
+    maxBookingLength: number;
+  };
+  bookedDates: Date[];
+  cabin: {
+    regularPrice: number;
+    discount: number;
+  };
+}
+
+function isAlreadyBooked(range: DayRange, datesArr: Date[]) {
   return (
     range.from &&
     range.to &&
     datesArr.some((date) =>
-      isWithinInterval(date, { start: range.from, end: range.to })
+      isWithinInterval(date, {
+        start: range.from!,
+        end: range.to!,
+      })
     )
   );
 }
 
-function DateSelector({ settings, bookedDates, cabin }) {
+function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
   const { range, setRange, resetRange } = useReservation();
 
   const displayRange = isAlreadyBooked(range, bookedDates) ? {} : range;
 
   const { regularPrice, discount } = cabin;
   const { minBookingLength, maxBookingLength } = settings;
-  const numNights = differenceInDays(range.to, range.from);
 
-  const cabinPrice = (regularPrice - discount) * numNights;
+  // 添加安全检查
+  const numNights =
+    range.from && range.to ? differenceInDays(range.to, range.from) : 0;
+
+  // 只在有效天数时计算价格
+  const cabinPrice = numNights > 0 ? (regularPrice - discount) * numNights : 0;
 
   return (
     <div className="flex flex-col justify-between">
       <DayPicker
         className="pt-12 place-self-center"
         mode="range"
-        onSelect={(range) => setRange(range)}
+        onSelect={(newRange) => setRange(newRange || {})}
         selected={displayRange}
         min={minBookingLength + 1}
         max={maxBookingLength}
