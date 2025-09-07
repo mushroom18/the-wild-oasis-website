@@ -6,10 +6,12 @@ import {
   getBookings,
   updateBooking,
   updateGuest,
+  createBooking,
 } from "./data-service";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
 import { redirect } from "next/navigation";
+import { is } from "date-fns/locale";
 
 export async function updateGuestProfile(formData) {
   //console.log("formdata", formData);
@@ -63,4 +65,24 @@ export async function updateReservation(formData) {
   revalidatePath("/account/reservations");
   revalidatePath(`/account/reservations/edit/${bookingId}`);
   redirect("/account/reservations");
+}
+
+export async function createNewBooking(bookingData, formData) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("you must be logged in to create a booking");
+  const newBooking = {
+    ...bookingData,
+    numGuests: Number(formData.get("numGuests")),
+    observations: formData.get("observations").slice(0, 1000),
+    guestId: session.user.guestId,
+    extrasPrice: 0,
+    totalPrice: bookingData.cabinPrice,
+    isPaid: false,
+    hasBreakfast: false,
+    status: "unconfirmed",
+  };
+
+  await createBooking(newBooking);
+  revalidatePath(`/cabins/${bookingData.cabinId}`);
+  redirect("/cabins/thankyou");
 }

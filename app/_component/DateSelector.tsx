@@ -42,11 +42,9 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
   const { regularPrice, discount } = cabin;
   const { minBookingLength, maxBookingLength } = settings;
 
-  // 添加安全检查
   const numNights =
     range.from && range.to ? differenceInDays(range.to, range.from) : 0;
 
-  // 只在有效天数时计算价格
   const cabinPrice = numNights > 0 ? (regularPrice - discount) * numNights : 0;
 
   return (
